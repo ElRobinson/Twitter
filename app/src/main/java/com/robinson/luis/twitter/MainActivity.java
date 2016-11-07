@@ -97,8 +97,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete( @NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()){
-                            Toast.makeText(getBaseContext(),"Error to create account",Toast.LENGTH_SHORT);
-                            Log.d("LOG D", "erro ao criar a conta");
+                            // password with at least 6 catacters
+                            Log.d("Log D", "onComplete: Failed=" + task.getException().getMessage());
                         } else {
                             FirebaseDatabase db = FirebaseDatabase.getInstance();
                             // create a object id in the field "users"
