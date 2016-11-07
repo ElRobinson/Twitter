@@ -1,6 +1,9 @@
 package com.robinson.luis.twitter;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.renderscript.Sampler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,7 +13,9 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,6 +27,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class LogedActivity extends AppCompatActivity {
 
@@ -174,7 +182,44 @@ public class LogedActivity extends AppCompatActivity {
 
         if (id == R.id.feed){
 
+            Intent i = new Intent(getApplicationContext(),MyFeed.class);
+            i.putStringArrayListExtra("following",follow);
+            startActivity(i);
+
         } else if (id == R.id.tweet){
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle("Send a Tweet");
+            final EditText contentTweet = new EditText(this);
+            builder.setView(contentTweet);
+
+            builder.setPositiveButton("Send", new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialog,int which){
+                    Map<String,Object> tweet = new HashMap<String, Object>();
+                    tweet.put("msg",contentTweet.getText().toString());
+                    tweet.put("uid",myUid);
+                    tweet.put("data", -1*System.currentTimeMillis());
+                    tweet.put("name",myName);
+                    ref.child("tweets").push().setValue(tweet);
+
+                    Toast.makeText(getApplicationContext(),"Your tweet was send",Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog,int which){
+                    dialog.cancel();
+                }
+            });
+
+            builder.show();
+
+            return true;
+
+
 
         } else if(id == R.id.logout) {
             FirebaseAuth.getInstance().signOut();
