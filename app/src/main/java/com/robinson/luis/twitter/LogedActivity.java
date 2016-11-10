@@ -109,7 +109,7 @@ public class LogedActivity extends AppCompatActivity {
             childEventListener = new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    if (dataSnapshot.child("uid").getValue(String.class).equals(myUid)){
+                    if (!dataSnapshot.child("uid").getValue(String.class).equals(myUid)){
                         users.add(dataSnapshot.child("name").getValue(String.class));
                         userids.add(dataSnapshot.child("uid").getValue(String.class));
                         arrayAdapter.notifyDataSetChanged();
